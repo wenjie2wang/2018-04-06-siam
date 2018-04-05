@@ -1,0 +1,17 @@
+revealjs::revealjs_presentation:
+  self_contained: false
+  slide_level: 2
+  theme: white
+  highlight: default
+  css: www/css/styles.css
+  includes:
+    in_header: docs/www/html/head.html
+    after_body: docs/www/html/suffix.html
+  fig_width: 9
+  fig_height: 5
+  fig_caption: true
+  transition: none
+  reveal_options:
+    slideNumber: 'c/t'
+    previewLinks: false
+    controls: false
