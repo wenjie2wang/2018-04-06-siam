@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="dcterms.date" content="2018-04-06" />
+  <title>Introduction to R Programming</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="index_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="index_files/reveal.js-3.3.0.1/css/theme/white.css" id="theme">
+
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+    <link rel="stylesheet" href="www/css/styles.css"/>
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="index_files/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="index_files/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="index_files/bootstrap-3.3.7/shim/html5shiv.min.js"></script>
+    <script src="index_files/bootstrap-3.3.7/shim/respond.min.js"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Introduction to R Programming</h1>
+  <h1 class="subtitle">Part II</h1>
+    <h2 class="author"><div class="line-block">Wenjie Wang<br />
+Department of Statistics, UConn</div></h2>
+    <h3 class="date">April 6, 2018</h3>
+</section>
+
+<section id="getting-started" class="slide level2">
+<h2>Getting Started</h2>
+<ul>
+<li><p>the slides of part I: <a href="https://wenjie-stat.me/2018-01-19-siam/">wenjie-stat.me/2018-01-19-siam/</a></p></li>
+<li><p>these slides: <a href="https://wenjie-stat.me/2018-04-06-siam/">wenjie-stat.me/2018-04-06-siam/</a></p></li>
+<li><p>source code of these slides and all the examples: <a href="https://github.com/wenjie2wang/2018-04-06-siam/" class="uri">https://github.com/wenjie2wang/2018-04-06-siam/</a></p></li>
+<li><p>prerequisites: <a href="https://cran.r-project.org">R</a> and possibly the <a href="https://www.rstudio.com/products/RStudio/#Desktop">RStudio IDE</a> have been installed.</p></li>
+<li><p>a list of R packages needed for following examples:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="kw">c</span>(<span class="st">&quot;bookdown&quot;</span>, <span class="st">&quot;data.table&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;DT&quot;</span>, <span class="st">&quot;dygraphs&quot;</span>, <span class="st">&quot;htmltools&quot;</span>,</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">      <span class="st">&quot;leaflet&quot;</span>, <span class="st">&quot;microbenchmark&quot;</span>, <span class="st">&quot;plotly&quot;</span>, <span class="st">&quot;R6&quot;</span>, <span class="st">&quot;readr&quot;</span>, <span class="st">&quot;shiny&quot;</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">)</a></code></pre></div></li>
+</ul>
+</section>
+<section id="outline" class="slide level2">
+<h2>Outline</h2>
+<ul>
+<li><p>reading and writing data</p></li>
+<li><p>data processing and manipulation</p></li>
+<li><p>reproducible reports with R Markdown</p></li>
+<li><p>interactive data visualization with R Shiny</p></li>
+<li><p><del>object oriented systems in R</del></p></li>
+</ul>
+</section>
+<section id="session-information" class="slide level2">
+<h2>Session information</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
+<pre><code>## R version 3.4.4 (2018-03-15)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Arch Linux
+## 
+## Matrix products: default
+## BLAS: /usr/lib/libblas.so.3.8.0
+## LAPACK: /usr/lib/liblapack.so.3.8.0
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C               LC_TIME=en_US.UTF-8       
+##  [4] LC_COLLATE=en_US.UTF-8     LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                  LC_ADDRESS=C              
+## [10] LC_TELEPHONE=C             LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] methods   stats     graphics  grDevices utils     datasets  base     
+## 
+## other attached packages:
+##  [1] shiny_1.0.5          readr_1.1.1          R6_2.2.2             plotly_4.7.1        
+##  [5] ggplot2_2.2.1        microbenchmark_1.4-4 leaflet_1.1.0        htmltools_0.3.6     
+##  [9] dygraphs_1.1.1.4     DT_0.4               dplyr_0.7.4          data.table_1.10.4-3 
+## [13] bookdown_0.7        
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.16      plyr_1.8.4        pillar_1.2.1      compiler_3.4.4    bindr_0.1.1      
+##  [6] tools_3.4.4       digest_0.6.15     viridisLite_0.3.0 jsonlite_1.5      gtable_0.2.0     
+## [11] evaluate_0.10.1   tibble_1.4.2      lattice_0.20-35   pkgconfig_2.0.1   rlang_0.2.0      
+## [16] crosstalk_1.0.0   yaml_2.1.18       xfun_0.1          bindrcpp_0.2.2    httr_1.3.1       
+## [21] stringr_1.3.0     knitr_1.20        hms_0.4.2         htmlwidgets_1.0   revealjs_0.9     
+## [26] rprojroot_1.3-2   grid_3.4.4        glue_1.2.0        rmarkdown_1.9     tidyr_0.8.0      
+## [31] purrr_0.2.4       magrittr_1.5      scales_0.5.0      backports_1.1.2   assertthat_0.2.0 
+## [36] colorspace_1.3-2  mime_0.5          xtable_1.8-2      httpuv_1.3.6.2    stringi_1.1.7    
+## [41] lazyeval_0.2.1    munsell_0.4.3     zoo_1.8-1</code></pre>
+</section>
+<section id="reading-and-writing-data" class="slide level2">
+<h2>Reading and writing data</h2>
+<ul>
+<li>basic functions:</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">read.table</span>(), <span class="kw">read.csv</span>(), <span class="kw">readLines</span>(), <span class="kw">load</span>(), <span class="kw">readRDS</span>(), ...</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">write.table</span>(), <span class="kw">write.csv</span>(), <span class="kw">writeLines</span>(), <span class="kw">save</span>(), <span class="kw">saveRDS</span>(), ...</a></code></pre></div>
+<ul>
+<li><p>can be slow when working with large data</p></li>
+<li>some useful packages:
+<ul>
+<li>for plain-text rectangular data (such as csv, tsv, and fwf): <strong>utils</strong>, <strong><a href="https://readr.tidyverse.org">readr</a></strong>, <strong><a href="https://github.com/Rdatatable/data.table/wiki">data.table</a></strong>, …</li>
+<li>for data stored in other formats: <strong>foreign</strong>, <strong>haven</strong>, <strong>openxlsx</strong>, …</li>
+</ul></li>
+</ul>
+</section>
+<section id="some-tricks-for-efficiently-reading-large-text-files-using-read.table" class="slide level2">
+<h2>Some tricks for efficiently reading large text files using <code>read.table()</code></h2>
+<ul>
+<li>specify <code>nrows</code>: the maximum number of rows to read in
+<ul>
+<li>e.g., we may determine the number of rows of <code>data.csv</code> by <code>get_nrows(&quot;data.csv&quot;)</code>, where <code>get_nrows()</code> is a simple function as follows:</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">get_nrows &lt;-<span class="st"> </span><span class="cf">function</span>(file) {</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">    <span class="kw">as.integer</span>(</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">        <span class="kw">system2</span>(<span class="st">&quot;wc&quot;</span>, <span class="kw">sprintf</span>(<span class="st">&quot;-l %s | awk &#39;{print $1}&#39;&quot;</span>, file), <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">    )</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">}</a></code></pre></div>
+<ul>
+<li>specify <code>colClasses</code>: column classes
+<ul>
+<li>e.g., only read in the first ten rows (<code>nrows = 10</code>) and decide on the appropriate classes</li>
+</ul></li>
+<li>see <a href="http://members.cbio.mines-paristech.fr/~thocking/reading-large-text-files-into-R.html">this short post</a> by Toby Hocking for a nice summary</li>
+</ul>
+</section>
+<section id="using-readr-package" class="slide level2">
+<h2>Using <strong>readr</strong> package</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">read_table</span>(), <span class="kw">read_csv</span>(), <span class="kw">read_tsv</span>(), <span class="kw">read_fwf</span>(), <span class="kw">read_lines</span>(), ...</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">write_table</span>(), <span class="kw">write_csv</span>(), <span class="kw">write_tsv</span>(), <span class="kw">write_fwf</span>(), <span class="kw">write_lines</span>(), ...</a></code></pre></div>
+<p><strong>readr</strong> providers a few features that make it more user-friendly than base R:</p>
+<ul>
+<li>more consistent arguments’ naming (e.g., <code>col_names</code> vs. <code>header</code> and <code>col_types</code> vs. <code>colClasses</code>)</li>
+<li>leave strings as is by default, and automatically parse common date/time formats</li>
+<li>able to read compressed files (e.g., <code>.gz</code>, <code>.bz2</code>, <code>.xz</code>, or <code>.zip</code>) automatically</li>
+<li>…</li>
+</ul>
+</section>
+<section id="using-data.table-package" class="slide level2">
+<h2>Using <strong>data.table</strong> package</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">fread</span>(), <span class="kw">fwrite</span>()</a></code></pre></div>
+<ul>
+<li><code>fread()</code>/<code>fwrite()</code> is similar to <code>read.table()</code>/<code>write.table()</code> but much faster and more convenient.</li>
+<li>All controls such as <code>sep</code>, <code>colClasses</code> and <code>nrows</code> are automatically detected (or guessed) in <code>fread()</code>.</li>
+</ul>
+</section>
+<section id="example-data" class="slide level2">
+<h2>Example data</h2>
+<ul>
+<li>randomly generate a “not so small” csv file: <code>data.csv</code></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">613</span>); n &lt;-<span class="st"> </span><span class="fl">1e6</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">foo =</span> <span class="kw">rnorm</span>(n),</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">                  <span class="dt">bar =</span> <span class="kw">rpois</span>(n, <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">                  <span class="dt">alpha =</span> <span class="kw">sample</span>(letters, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">                  <span class="dt">beta =</span> <span class="kw">as.Date</span>(<span class="kw">rpois</span>(n, <span class="dv">10</span>), <span class="dt">origin =</span> <span class="st">&quot;2018-04-06&quot;</span>),</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">                  <span class="dt">gamma =</span> <span class="kw">gl</span>(<span class="dv">5</span>, <span class="dt">k =</span> n <span class="op">/</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">labels =</span> LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]))</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw">str</span>(dat)</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  5 variables:
+##  $ foo  : num  2.026 -1.261 -0.454 0.156 -0.905 ...
+##  $ bar  : int  5 3 4 8 7 4 7 4 4 5 ...
+##  $ alpha: chr  &quot;d&quot; &quot;k&quot; &quot;a&quot; &quot;b&quot; ...
+##  $ beta : Date, format: &quot;2018-04-16&quot; &quot;2018-04-13&quot; &quot;2018-04-16&quot; ...
+##  $ gamma: Factor w/ 5 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">write.table</span>(dat, <span class="dt">file =</span> <span class="st">&quot;data.csv&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">sprintf</span>(<span class="st">&quot;File size: %.0f MB&quot;</span>, <span class="kw">file.info</span>(<span class="st">&quot;data.csv&quot;</span>)<span class="op">$</span>size <span class="op">/</span><span class="st"> </span><span class="dv">1024</span> <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;File size: 37 MB&quot;</code></pre>
+</section>
+<section id="examples-of-reading-csv-file" class="slide level2">
+<h2>Examples of reading csv file</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">## simply use `read.csv`</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">dat1 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;data.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">## or `read.table`</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">dat2 &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">## or specify `nrows` and `colClasses`</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">dat3 &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">                   <span class="dt">nrows =</span> <span class="kw">get_nrows</span>(<span class="st">&quot;data.csv&quot;</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">                   <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;integer&quot;</span>,</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">                                  <span class="kw">rep</span>(<span class="st">&quot;character&quot;</span>, <span class="dv">3</span>)))</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">## use readr::read_csv</a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">dat4 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">dat5 &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">col_types =</span> <span class="kw">c</span>(<span class="st">&quot;diccc&quot;</span>),</a>
+<a class="sourceLine" id="cb12-13" data-line-number="13">                        <span class="dt">n_max =</span> <span class="kw">get_nrows</span>(<span class="st">&quot;data.csv&quot;</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb12-14" data-line-number="14">## use data.table::fread</a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">dat6 &lt;-<span class="st"> </span>data.table<span class="op">::</span><span class="kw">fread</span>(<span class="st">&quot;data.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb12-16" data-line-number="16">dat7 &lt;-<span class="st"> </span>data.table<span class="op">::</span><span class="kw">fread</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>,</a>
+<a class="sourceLine" id="cb12-17" data-line-number="17">                          <span class="dt">nrows =</span> <span class="kw">get_nrows</span>(<span class="st">&quot;data.csv&quot;</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb12-18" data-line-number="18">## exercise:</a>
+<a class="sourceLine" id="cb12-19" data-line-number="19">##   check the resulting column types of each `data.frame` object.</a>
+<a class="sourceLine" id="cb12-20" data-line-number="20">##   is there any difference? what are the classes of `dat4`,...,`dat7`?</a></code></pre></div>
+</section>
+<section class="slide level2">
+
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">library</span>(microbenchmark)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw">microbenchmark</span>(</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">    <span class="dt">read.csv =</span> <span class="kw">read.csv</span>(<span class="st">&quot;data.csv&quot;</span>),</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">    <span class="dt">read.table =</span> <span class="kw">read.table</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">    <span class="dt">read.table_tricks =</span> <span class="kw">read.table</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">                                   <span class="dt">nrows =</span> <span class="kw">get_nrows</span>(<span class="st">&quot;data.csv&quot;</span>) <span class="op">-</span><span class="st"> </span>1L,</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">                                   <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;integer&quot;</span>,</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">                                                  <span class="kw">rep</span>(<span class="st">&quot;character&quot;</span>, <span class="dv">3</span>))),</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">    <span class="dt">read_csv =</span> readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">col_types =</span> <span class="kw">cols</span>()),</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">    <span class="dt">read_csv_tricks =</span> readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">col_types =</span> <span class="kw">c</span>(<span class="st">&quot;diccc&quot;</span>),</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">                                      <span class="dt">n_max =</span> <span class="kw">get_nrows</span>(<span class="st">&quot;data.csv&quot;</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">    <span class="dt">fread =</span> data.table<span class="op">::</span><span class="kw">fread</span>(<span class="st">&quot;data.csv&quot;</span>),</a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">    <span class="dt">fread_tricks =</span> data.table<span class="op">::</span><span class="kw">fread</span>(<span class="st">&quot;data.csv&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>,</a>
+<a class="sourceLine" id="cb13-14" data-line-number="14">                                     <span class="dt">nrows =</span> <span class="kw">get_nrows</span>(<span class="st">&quot;data.csv&quot;</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">                                     <span class="dt">colClasses =</span> <span class="kw">c</span>(<span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;integer&quot;</span>,</a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">                                                    <span class="kw">rep</span>(<span class="st">&quot;character&quot;</span>, <span class="dv">3</span>))),</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17">    <span class="dt">times =</span> <span class="dv">30</span>, <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span>)</a></code></pre></div>
+<pre><code>## Unit: relative
+##               expr      min       lq     mean   median       uq      max neval  cld
+##           read.csv 3.907657 4.225091 4.292683 4.532457 4.326669 3.476520    30    d
+##         read.table 3.844444 4.306483 4.306137 4.531600 4.309966 3.637753    30    d
+##  read.table_tricks 2.630846 2.628233 2.761902 2.779265 2.917780 2.370641    30   c 
+##           read_csv 2.333504 2.328710 2.377687 2.384162 2.410099 2.029660    30  b  
+##    read_csv_tricks 2.172285 2.180941 2.351495 2.427447 2.416107 2.002160    30  b  
+##              fread 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000    30 a   
+##       fread_tricks 1.006732 1.007077 1.016511 1.009074 1.005879 1.109504    30 a</code></pre>
+</section>
+<section id="data-processing-and-manipulation" class="slide level2">
+<h2>Data processing and manipulation</h2>
+<ul>
+<li class="fragment">It is said that data scientists spent about 80% of time on the process of cleaning and preparing the data.</li>
+</ul>
+<ul>
+<li class="fragment">How to make data cleaning as efficient and effective as possible?</li>
+</ul>
+<ul>
+<li class="fragment">In fact, base R provides a variety of useful functions for data processing and manipulation.</li>
+</ul>
+<ul>
+<li class="fragment">two popular add-on packages: <strong><a href="http://dplyr.tidyverse.org">dplyr</a></strong> and <strong><a href="https://github.com/Rdatatable/data.table/wiki">data.table</a></strong></li>
+</ul>
+</section>
+<section id="dplyr-a-grammar-of-data-manipulation" class="slide level2">
+<h2>dplyr: A grammar of data manipulation</h2>
+<p>some of the key “verbs”:</p>
+<ul>
+<li><code>select()</code>: picks columns/variables based on names or indices</li>
+<li><code>filter()</code>: extracts a subset of rows based on logical conditions</li>
+<li><code>arrange()</code>: reorders rows</li>
+<li><code>rename()</code>: renames columns/variables</li>
+<li><code>mutate()</code>: creates new columns/variables</li>
+<li><code>summarise()</code> or <code>summarize()</code>: computes summary statistics</li>
+<li><code>group_by()</code>: helps perform operations by group.</li>
+</ul>
+</section>
+<section id="common-properties" class="slide level2">
+<h2>Common properties</h2>
+<p>In particular,</p>
+<ul>
+<li>We may directly refer to columns without using <code>$</code> operator.</li>
+<li>The first argument is a data frame and the returned result is a new data frame.</li>
+<li>must be tidy data (Wickham, 2014): one observation per row, and each column representing a feature or characteristic of that observation</li>
+</ul>
+</section>
+<section id="select" class="slide level2">
+<h2><code>select()</code></h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">names</span>(dat)</a></code></pre></div>
+<pre><code>## [1] &quot;foo&quot;   &quot;bar&quot;   &quot;alpha&quot; &quot;beta&quot;  &quot;gamma&quot;</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">select</span>(dat, foo, alpha))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  2 variables:
+##  $ foo  : num  2.026 -1.261 -0.454 0.156 -0.905 ...
+##  $ alpha: chr  &quot;d&quot; &quot;k&quot; &quot;a&quot; &quot;b&quot; ...</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">select</span>(dat, bar<span class="op">:</span>beta))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  3 variables:
+##  $ bar  : int  5 3 4 8 7 4 7 4 4 5 ...
+##  $ alpha: chr  &quot;d&quot; &quot;k&quot; &quot;a&quot; &quot;b&quot; ...
+##  $ beta : Date, format: &quot;2018-04-16&quot; &quot;2018-04-13&quot; &quot;2018-04-16&quot; ...</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">select</span>(dat, <span class="op">-</span>(bar<span class="op">:</span>beta)))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  2 variables:
+##  $ foo  : num  2.026 -1.261 -0.454 0.156 -0.905 ...
+##  $ gamma: Factor w/ 5 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</section>
+<section class="slide level2">
+
+<ul>
+<li><code>select()</code> helpers:</li>
+</ul>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">starts_with</span>(), <span class="kw">ends_with</span>(), <span class="kw">contains</span>(), <span class="kw">matches</span>(),</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">num_range</span>(), <span class="kw">one_of</span>(), <span class="kw">everything</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">select</span>(dat, <span class="kw">starts_with</span>(<span class="st">&quot;b&quot;</span>)))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  2 variables:
+##  $ bar : int  5 3 4 8 7 4 7 4 4 5 ...
+##  $ beta: Date, format: &quot;2018-04-16&quot; &quot;2018-04-13&quot; &quot;2018-04-16&quot; ...</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">select</span>(dat, <span class="kw">ends_with</span>(<span class="st">&quot;a&quot;</span>)))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  3 variables:
+##  $ alpha: chr  &quot;d&quot; &quot;k&quot; &quot;a&quot; &quot;b&quot; ...
+##  $ beta : Date, format: &quot;2018-04-16&quot; &quot;2018-04-13&quot; &quot;2018-04-16&quot; ...
+##  $ gamma: Factor w/ 5 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">select</span>(dat, <span class="op">-</span><span class="kw">matches</span>(<span class="st">&quot;^b|a$&quot;</span>)))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  1 variable:
+##  $ foo: num  2.026 -1.261 -0.454 0.156 -0.905 ...</code></pre>
+</section>
+<section id="filter" class="slide level2">
+<h2><code>filter()</code></h2>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">filter</span>(dat, foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    7086 obs. of  5 variables:
+##  $ foo  : num  2.24 2.36 2.14 2.02 2.14 ...
+##  $ bar  : int  3 4 4 4 4 3 3 4 4 4 ...
+##  $ alpha: chr  &quot;h&quot; &quot;j&quot; &quot;l&quot; &quot;o&quot; ...
+##  $ beta : Date, format: &quot;2018-04-15&quot; &quot;2018-04-21&quot; &quot;2018-04-17&quot; ...
+##  $ gamma: Factor w/ 5 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">## str(filter(dat, foo &gt; 2, bar %in% c(3, 4))) # equivalent</a></code></pre></div>
+<ul>
+<li>hmmm… why inventing another wheel?</li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">## why not use `[.data.frame`?</a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">subDat &lt;-<span class="st"> </span>dat[dat<span class="op">$</span>foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>dat<span class="op">$</span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), ]</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3">## not a fan of `$` operator? okay! no `$` if using `with`, right?</a>
+<a class="sourceLine" id="cb33-4" data-line-number="4">subDat &lt;-<span class="st"> </span><span class="kw">with</span>(dat, dat[foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), ])</a>
+<a class="sourceLine" id="cb33-5" data-line-number="5">## how about using `base::subset`?</a>
+<a class="sourceLine" id="cb33-6" data-line-number="6">subDat &lt;-<span class="st"> </span>base<span class="op">::</span><span class="kw">subset</span>(dat, foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>))</a></code></pre></div>
+</section>
+<section id="a-quick-benchmarking" class="slide level2">
+<h2>A quick benchmarking</h2>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">dat_tbl &lt;-<span class="st"> </span><span class="kw">tbl_df</span>(dat)</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">dat_dt &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(dat)</a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="kw">microbenchmark</span>(</a>
+<a class="sourceLine" id="cb34-4" data-line-number="4">    <span class="st">&quot;[_$&quot;</span> =<span class="st"> </span>dat[dat<span class="op">$</span>foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>dat<span class="op">$</span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), ],</a>
+<a class="sourceLine" id="cb34-5" data-line-number="5">    <span class="st">&quot;[_with&quot;</span> =<span class="st"> </span><span class="kw">with</span>(dat, dat[foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>), ]),</a>
+<a class="sourceLine" id="cb34-6" data-line-number="6">    <span class="st">&quot;subset&quot;</span> =<span class="st"> </span>base<span class="op">::</span><span class="kw">subset</span>(dat, foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)),</a>
+<a class="sourceLine" id="cb34-7" data-line-number="7">    <span class="st">&quot;filter_&amp;&quot;</span> =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(dat, foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)),</a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">    <span class="st">&quot;filter_,&quot;</span> =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(dat, foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>, bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)),</a>
+<a class="sourceLine" id="cb34-9" data-line-number="9">    <span class="st">&quot;filter_tbl&quot;</span> =<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(dat_tbl, foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span>, bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)),</a>
+<a class="sourceLine" id="cb34-10" data-line-number="10">    <span class="st">&quot;data.table&quot;</span> =<span class="st"> </span>dat_dt[foo <span class="op">&gt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span>bar <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>)],</a>
+<a class="sourceLine" id="cb34-11" data-line-number="11">    <span class="dt">times =</span> <span class="dv">200</span>, <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></a>
+<a class="sourceLine" id="cb34-12" data-line-number="12">)</a></code></pre></div>
+<pre><code>## Unit: relative
+##        expr      min       lq     mean   median       uq      max neval cld
+##         [_$ 1.200435 1.188129 1.220260 1.206183 1.189927 1.063432   200  b 
+##      [_with 1.183658 1.193324 1.254565 1.206986 1.186019 1.160299   200  b 
+##      subset 1.338723 1.315983 1.363429 1.324302 1.313516 1.060694   200   c
+##    filter_&amp; 1.056401 1.056870 1.075000 1.051222 1.038148 1.022696   200 a  
+##    filter_, 1.060556 1.060126 1.052689 1.055792 1.043553 1.045714   200 a  
+##  filter_tbl 1.054250 1.050534 1.072195 1.048356 1.043918 1.028078   200 a  
+##  data.table 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000   200 a</code></pre>
+</section>
+<section id="arrange" class="slide level2">
+<h2><code>arrange()</code></h2>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">asc_dat &lt;-<span class="st"> </span><span class="kw">arrange</span>(dat, beta, foo)</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="kw">head</span>(<span class="kw">select</span>(asc_dat, beta, foo), <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##         beta       foo
+## 1 2018-04-06 -2.224411
+## 2 2018-04-06 -1.721596
+## 3 2018-04-06 -1.653048</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">tail</span>(<span class="kw">select</span>(asc_dat, beta, foo), <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##               beta        foo
+## 999998  2018-05-04  1.0577441
+## 999999  2018-05-05 -0.2527760
+## 1000000 2018-05-05  0.3215835</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">desc_dat &lt;-<span class="st"> </span><span class="kw">arrange</span>(dat, <span class="kw">desc</span>(beta), foo)</a>
+<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="kw">head</span>(<span class="kw">select</span>(desc_dat, beta, foo), <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##         beta        foo
+## 1 2018-05-05 -0.2527760
+## 2 2018-05-05  0.3215835
+## 3 2018-05-04 -0.1928452</code></pre>
+<ul>
+<li>again, why not use <code>base::order</code>?</li>
+</ul>
+</section>
+<section id="a-quick-benchmarking-1" class="slide level2">
+<h2>A quick benchmarking</h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">microbenchmark</span>(</a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">    <span class="st">&quot;order_$&quot;</span> =<span class="st"> </span>dat[<span class="kw">order</span>(<span class="kw">as.numeric</span>(dat<span class="op">$</span>beta), dat<span class="op">$</span>foo,</a>
+<a class="sourceLine" id="cb42-3" data-line-number="3">                          <span class="dt">decreasing =</span> <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)), ],</a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">    <span class="st">&quot;order_with&quot;</span> =<span class="st"> </span><span class="kw">with</span>(dat, dat[<span class="kw">order</span>(<span class="kw">as.numeric</span>(beta), foo,</a>
+<a class="sourceLine" id="cb42-5" data-line-number="5">                                       <span class="dt">decreasing =</span> <span class="kw">c</span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>)), ]),</a>
+<a class="sourceLine" id="cb42-6" data-line-number="6">    <span class="st">&quot;arrange&quot;</span> =<span class="st"> </span><span class="kw">arrange</span>(dat, <span class="kw">desc</span>(beta), foo),</a>
+<a class="sourceLine" id="cb42-7" data-line-number="7">    <span class="st">&quot;arrange_as&quot;</span> =<span class="st"> </span><span class="kw">arrange</span>(dat, <span class="kw">desc</span>(<span class="kw">as.numeric</span>(beta)), foo),</a>
+<a class="sourceLine" id="cb42-8" data-line-number="8">    <span class="st">&quot;data.table&quot;</span> =<span class="st"> </span>dat_dt[<span class="kw">order</span>(<span class="op">-</span><span class="st"> </span>beta, foo), ],</a>
+<a class="sourceLine" id="cb42-9" data-line-number="9">    <span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></a>
+<a class="sourceLine" id="cb42-10" data-line-number="10">)</a></code></pre></div>
+<pre><code>## Unit: relative
+##        expr      min       lq     mean   median       uq       max neval cld
+##     order_$ 1.734019 1.737106 1.737325 1.744590 1.752398 0.7778197   100  b 
+##  order_with 1.698671 1.742659 1.793096 1.747756 1.842331 1.8191696   100  b 
+##     arrange 5.346866 5.301355 5.129763 5.301986 5.240173 2.2288166   100   c
+##  arrange_as 5.329339 5.321722 5.163903 5.308573 5.280767 2.2507773   100   c
+##  data.table 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a</code></pre>
+</section>
+<section id="rename" class="slide level2">
+<h2><code>rename()</code></h2>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">names</span>(<span class="kw">rename</span>(dat, <span class="dt">x =</span> foo, <span class="dt">y =</span> bar))</a></code></pre></div>
+<pre><code>## [1] &quot;x&quot;     &quot;y&quot;     &quot;alpha&quot; &quot;beta&quot;  &quot;gamma&quot;</code></pre>
+<ul>
+<li>how to do it with base R?</li>
+</ul>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">names</span>(dat)[<span class="kw">names</span>(dat) <span class="op">==</span><span class="st"> &quot;foo&quot;</span>] &lt;-<span class="st"> &quot;x&quot;</span></a>
+<a class="sourceLine" id="cb46-2" data-line-number="2"><span class="kw">names</span>(dat)[<span class="kw">names</span>(dat) <span class="op">==</span><span class="st"> &quot;bar&quot;</span>] &lt;-<span class="st"> &quot;y&quot;</span></a></code></pre></div>
+<ul>
+<li>what about <strong>data.table</strong>?</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">setnames</span>(dat_dt, <span class="kw">c</span>(<span class="st">&quot;foo&quot;</span>, <span class="st">&quot;bar&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))</a></code></pre></div>
+</section>
+<section id="mutate" class="slide level2">
+<h2><code>mutate()</code></h2>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">str</span>(<span class="kw">mutate</span>(dat, <span class="dt">bar_centered =</span> bar <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(bar)))</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    1000000 obs. of  6 variables:
+##  $ foo         : num  2.026 -1.261 -0.454 0.156 -0.905 ...
+##  $ bar         : int  5 3 4 8 7 4 7 4 4 5 ...
+##  $ alpha       : chr  &quot;d&quot; &quot;k&quot; &quot;a&quot; &quot;b&quot; ...
+##  $ beta        : Date, format: &quot;2018-04-16&quot; &quot;2018-04-13&quot; &quot;2018-04-16&quot; ...
+##  $ gamma       : Factor w/ 5 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ bar_centered: num  -0.00317 -2.00317 -1.00317 2.99683 1.99683 ...</code></pre>
+<ul>
+<li>how to do it with base R?</li>
+</ul>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1">dat<span class="op">$</span>bar_centered &lt;-<span class="st"> </span>dat<span class="op">$</span>bar <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(dat<span class="op">$</span>bar)</a>
+<a class="sourceLine" id="cb50-2" data-line-number="2">## or using `with`</a>
+<a class="sourceLine" id="cb50-3" data-line-number="3">dat<span class="op">$</span>bar_centered &lt;-<span class="st"> </span><span class="kw">with</span>(dat, bar <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(bar))</a></code></pre></div>
+<ul>
+<li>what about <strong>data.table</strong>?</li>
+</ul>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1">dat_dt[, <span class="st">`</span><span class="dt">:=</span><span class="st">`</span>(<span class="dt">bar_centered =</span> bar <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(bar))]</a></code></pre></div>
+</section>
+<section id="summarize-and-group_by" class="slide level2">
+<h2><code>summarize</code> and <code>group_by()</code></h2>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1">dat_grouped &lt;-<span class="st"> </span><span class="kw">group_by</span>(dat, gamma)</a>
+<a class="sourceLine" id="cb52-2" data-line-number="2"><span class="kw">summarise</span>(dat_grouped, <span class="dt">mean_foo =</span> <span class="kw">sd</span>(foo), <span class="dt">median_bar =</span> <span class="kw">mean</span>(bar))</a></code></pre></div>
+<pre><code>## # A tibble: 5 x 3
+##   gamma mean_foo median_bar
+##   &lt;fct&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+## 1 A        0.999       5.00
+## 2 B        0.998       5.01
+## 3 C        0.999       5.01
+## 4 D        1.00        5.00
+## 5 E        1.00        5.00</code></pre>
+</section>
+<section id="forward-pipe-operator" class="slide level2">
+<h2>Forward-pipe operator: <code>%&gt;%</code></h2>
+<ul>
+<li>provided by <strong><a href="https://CRAN.R-project.org/package=magrittr">magrittr</a></strong> package</li>
+<li>similar idea to the “piping” (using <code>|</code>) in Linux and other Unix-like operating systems</li>
+<li>examples of basic chaining or piping:
+<ul>
+<li><code>x %&gt;% f</code> <span class="math inline">\(\Leftrightarrow\)</span> <code>f(x)</code></li>
+<li><code>x %&gt;% f(y)</code> <span class="math inline">\(\Leftrightarrow\)</span> <code>f(x, y)</code></li>
+<li><code>x %&gt;% f %&gt;% g %&gt;% h</code> <span class="math inline">\(\Leftrightarrow\)</span> <code>h(g(f(x)))</code></li>
+</ul></li>
+<li>example of argument placeholder
+<ul>
+<li><code>x %&gt;% f(y, .)</code> <span class="math inline">\(\Leftrightarrow\)</span> <code>f(y, x)</code></li>
+</ul></li>
+<li>pros: clearly expressing a sequence of multiple operations</li>
+<li>cons: possibly hard to debug without intermediate steps</li>
+</ul>
+</section>
+<section id="quick-benchmarkings" class="slide level2">
+<h2>Quick benchmarkings</h2>
+<ul>
+<li>any performance compromised?</li>
+</ul>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">microbenchmark</span>(</a>
+<a class="sourceLine" id="cb54-2" data-line-number="2">    <span class="dt">nested =</span> <span class="kw">summary</span>(<span class="kw">head</span>(dat, <span class="dt">n =</span> <span class="dv">100</span>)),</a>
+<a class="sourceLine" id="cb54-3" data-line-number="3">    <span class="dt">steps =</span> {</a>
+<a class="sourceLine" id="cb54-4" data-line-number="4">        tmpDat &lt;-<span class="st"> </span><span class="kw">head</span>(dat, <span class="dt">n =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb54-5" data-line-number="5">        <span class="kw">summary</span>(tmpDat)</a>
+<a class="sourceLine" id="cb54-6" data-line-number="6">    },</a>
+<a class="sourceLine" id="cb54-7" data-line-number="7">    <span class="dt">pipe =</span> dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span>summary,</a>
+<a class="sourceLine" id="cb54-8" data-line-number="8">    <span class="dt">times =</span> <span class="fl">1e3</span>, <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></a>
+<a class="sourceLine" id="cb54-9" data-line-number="9">)</a></code></pre></div>
+<pre><code>## Unit: relative
+##    expr       min       lq     mean   median        uq      max neval cld
+##  nested 1.0000000 1.000000 1.000000 1.000000 1.0000000 1.000000  1000  a 
+##   steps 0.9995403 1.000438 1.000223 1.000924 0.9966717 1.001759  1000  a 
+##    pipe 1.0627355 1.062922 1.080314 1.063366 1.0580139 1.017031  1000   b</code></pre>
+</section>
+<section class="slide level2">
+
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="kw">microbenchmark</span>(</a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">    <span class="dt">nested =</span> <span class="kw">prop.table</span>(<span class="kw">xtabs</span>(<span class="op">~</span><span class="st"> </span>bar, <span class="kw">head</span>(dat, <span class="dt">n =</span> <span class="dv">100</span>))),</a>
+<a class="sourceLine" id="cb56-3" data-line-number="3">    <span class="dt">steps =</span> {</a>
+<a class="sourceLine" id="cb56-4" data-line-number="4">        tmpDat &lt;-<span class="st"> </span><span class="kw">head</span>(dat, <span class="dt">n =</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb56-5" data-line-number="5">        tmpTab &lt;-<span class="st"> </span><span class="kw">xtabs</span>(<span class="op">~</span><span class="st"> </span>bar, tmpDat)</a>
+<a class="sourceLine" id="cb56-6" data-line-number="6">        <span class="kw">prop.table</span>(tmpTab)</a>
+<a class="sourceLine" id="cb56-7" data-line-number="7">    },</a>
+<a class="sourceLine" id="cb56-8" data-line-number="8">    <span class="dt">pipe =</span> dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">xtabs</span>(<span class="op">~</span><span class="st"> </span>bar, .) <span class="op">%&gt;%</span><span class="st"> </span>prop.table,</a>
+<a class="sourceLine" id="cb56-9" data-line-number="9">    <span class="dt">times =</span> <span class="fl">1e3</span>, <span class="dt">unit =</span> <span class="st">&quot;relative&quot;</span></a>
+<a class="sourceLine" id="cb56-10" data-line-number="10">)</a></code></pre></div>
+<pre><code>## Unit: relative
+##    expr      min       lq     mean   median       uq      max neval cld
+##  nested 2.353744 3.039528 2.468968 3.010881 2.108407 1.086845  1000   b
+##   steps 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000  1000  a 
+##    pipe 1.111918 1.109824 1.086706 1.120418 0.942647 1.012724  1000  a</code></pre>
+</section>
+<section id="using-dplyr-with-piping" class="slide level2">
+<h2>Using <strong>dplyr</strong> with piping</h2>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">dat <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span><span class="st"> </span>alpha) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"><span class="st">    </span><span class="kw">rename</span>(<span class="dt">group =</span> gamma) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">abs_foo =</span> <span class="kw">abs</span>(foo)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-5" data-line-number="5"><span class="st">    </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-6" data-line-number="6"><span class="st">    </span><span class="kw">arrange</span>(beta, <span class="kw">desc</span>(bar)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-7" data-line-number="7"><span class="st">    </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">200</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb58-8" data-line-number="8"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">median_abs_foo =</span> <span class="kw">median</span>(abs_foo))</a></code></pre></div>
+<pre><code>## # A tibble: 5 x 2
+##   group median_abs_foo
+##   &lt;fct&gt;          &lt;dbl&gt;
+## 1 A              0.654
+## 2 B              0.670
+## 3 C              0.722
+## 4 D              0.561
+## 5 E              0.620</code></pre>
+</section>
+<section id="reproducible-reports-with-r-markdown" class="slide level2">
+<h2>Reproducible reports with R Markdown</h2>
+<ul>
+<li>code + narratives = report</li>
+<li>some existing tools:
+<ul>
+<li>WEB (Donald Knuth, Literate Programming)</li>
+<li>Noweb (Norman Ramsey)</li>
+<li>Sweave (Friedrich Leisch and R-core)</li>
+<li><strong>knitr</strong> (Yihui Xie)</li>
+<li>Org mode + Babel (Carsten Dominik, Eric Schulte, …)</li>
+<li>Jupyter notebook</li>
+</ul></li>
+<li><strong>knitr</strong>:
+<ul>
+<li><code>.Rnw</code> (R + LaTeX)</li>
+<li><code>.Rmd</code> (R + Markdown)</li>
+<li>any computing language + any authoring language</li>
+</ul></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<ul>
+<li>R Markdown (<strong>rmarkdown</strong>): <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>
+<ul>
+<li><a href="http://rmarkdown.rstudio.com/gallery.html">gallery</a></li>
+<li><a href="https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf">cheatsheet</a></li>
+</ul></li>
+<li><strong>bookdown</strong>: <a href="https://bookdown.org" class="uri">https://bookdown.org</a></li>
+<li>examples:
+<ul>
+<li>these slides</li>
+<li>a <a href="https://github.com/statds/dslab-templates">project template</a> written in R Markdown and <strong>bookdown</strong> for <a href="http://statds.org">Data Science Lab at UConn</a></li>
+<li>learn from the other cool kids! <a href="http://yihui.name/knitr/demo/showcase/" class="uri">http://yihui.name/knitr/demo/showcase/</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="interactive-data-visualization-with-r-shiny" class="slide level2">
+<h2>Interactive data visualization with R Shiny</h2>
+<ul>
+<li><p>What is R Shiny?</p></li>
+<li><strong>shiny</strong> is an R package that makes it easy to build interactive web applications straight from R.
+<ul>
+<li>homepage: <a href="https://shiny.rstudio.com" target="_blank">https://shiny.rstudio.com</a></li>
+<li>a collection of toy examples by RStudio: <a href="https://github.com/rstudio/shiny-examples" target="_blank">https://github.com/rstudio/shiny-examples</a></li>
+<li>official <a href="https://shiny.rstudio.com/gallery" target="_blank">gallery</a>, <a href="https://shiny.rstudio.com/tutorial" target="_blank">tutorial</a>, and <a href="https://github.com/rstudio/cheatsheets/blob/master/shiny.pdf" target="_blank">cheatsheet</a></li>
+<li>other galleries: <a href="https://www.showmeshiny.com" target="_blank">Show me Shiny</a>, <a href="https://plot.ly/r/shiny-gallery/" target="_blank">Plotly</a>, …</li>
+</ul></li>
+</ul>
+</section>
+<section id="some-examples" class="slide level2">
+<h2>Some examples</h2>
+<ul>
+<li><a href="https://gallery.shinyapps.io/001-hello/" target="_blank">Hello Shiny!</a></li>
+<li><a href="https://www.showmeshiny.com/historical-english-soccer/" target="_blank">Exploring Historical English Soccer Data</a></li>
+<li><a href="https://github.com/kb230557/Flu_Shiny_App" target="_blank">Weekly influenza surveillance data</a></li>
+<li><a href="http://www.remyzum.com/shiny/Paris_Accidentologie/" target="_blank">Paris car accidents</a></li>
+<li><a href="https://www.showmeshiny.com/shinyhome/" target="_blank">Real estate analytics</a> using Shiny dashboard</li>
+</ul>
+</section>
+<section id="structure-of-a-shiny-app" class="slide level2">
+<h2>Structure of a Shiny app</h2>
+<p>By execution order:</p>
+<ol type="1">
+<li><p><code>global.R</code>: an optional script for code needed in <code>ui.R</code> and <code>server.R</code></p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">library</span>(shiny)              <span class="co"># e.g., attach the Shiny package</span></a></code></pre></div></li>
+<li><p><code>ui.R</code>: define user interface (UI) design</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">shinyUI</span>(<span class="kw">fluidPage</span>(</a>
+<a class="sourceLine" id="cb61-2" data-line-number="2">    ## e.g., create a fluid page</a>
+<a class="sourceLine" id="cb61-3" data-line-number="3">))</a></code></pre></div></li>
+<li><p><code>server.R</code>: define server-side logic</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="kw">shinyServer</span>(<span class="cf">function</span>(input, output, session) {</a>
+<a class="sourceLine" id="cb62-2" data-line-number="2">    ## a function with two required argument, `input` and `output`,</a>
+<a class="sourceLine" id="cb62-3" data-line-number="3">    ## and an optional argument `session`</a>
+<a class="sourceLine" id="cb62-4" data-line-number="4">})</a></code></pre></div></li>
+</ol>
+</section>
+<section id="alternative-structure" class="slide level2">
+<h2>Alternative structure</h2>
+<ul>
+<li>a sinlge script called <code>app.R</code></li>
+</ul>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">library</span>(shiny)</a>
+<a class="sourceLine" id="cb63-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb63-3" data-line-number="3">## e.g., create a fluid page</a>
+<a class="sourceLine" id="cb63-4" data-line-number="4">ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</a>
+<a class="sourceLine" id="cb63-5" data-line-number="5">    ## some ui elements and widgets</a>
+<a class="sourceLine" id="cb63-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb63-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb63-8" data-line-number="8">## define server-side logic</a>
+<a class="sourceLine" id="cb63-9" data-line-number="9">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</a>
+<a class="sourceLine" id="cb63-10" data-line-number="10">    ## the server function body</a>
+<a class="sourceLine" id="cb63-11" data-line-number="11">}</a>
+<a class="sourceLine" id="cb63-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb63-13" data-line-number="13"><span class="kw">shinyApp</span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</a></code></pre></div>
+</section>
+<section id="sidebar-layout" class="slide level2">
+<h2>Sidebar layout</h2>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</a>
+<a class="sourceLine" id="cb64-2" data-line-number="2">    <span class="kw">titlePanel</span>(<span class="st">&quot;my title panel&quot;</span>),</a>
+<a class="sourceLine" id="cb64-3" data-line-number="3">    <span class="kw">sidebarLayout</span>(</a>
+<a class="sourceLine" id="cb64-4" data-line-number="4">        <span class="kw">sidebarPanel</span>(<span class="st">&quot;my sidebar panel&quot;</span>),</a>
+<a class="sourceLine" id="cb64-5" data-line-number="5">        <span class="kw">mainPanel</span>(<span class="st">&quot;my main panel&quot;</span>)</a>
+<a class="sourceLine" id="cb64-6" data-line-number="6">    )</a>
+<a class="sourceLine" id="cb64-7" data-line-number="7">)</a></code></pre></div>
+<hr/>
+<div class="container-fluid">
+<h2>my title panel</h2>
+<div class="row">
+<div class="col-sm-4">
+<form class="well">my sidebar panel</form>
+</div>
+<div class="col-sm-8">my main panel</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<ul>
+<li><p>Shiny uses <a href="https://getbootstrap.com/docs/3.3/" target="_blank">Twitter Bootstrap 3</a>, the probably most popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web.</p></li>
+<li><p>the essential HTML code defined in <code>ui</code>:</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;container-fluid&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb65-2" data-line-number="2">  <span class="kw">&lt;h2&gt;</span>my title panel<span class="kw">&lt;/h2&gt;</span></a>
+<a class="sourceLine" id="cb65-3" data-line-number="3">  <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;row&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb65-4" data-line-number="4">    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;col-sm-4&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb65-5" data-line-number="5">      <span class="kw">&lt;form</span><span class="ot"> class=</span><span class="st">&quot;well&quot;</span><span class="kw">&gt;</span>my sidebar panel<span class="kw">&lt;/form&gt;</span></a>
+<a class="sourceLine" id="cb65-6" data-line-number="6">    <span class="kw">&lt;/div&gt;</span></a>
+<a class="sourceLine" id="cb65-7" data-line-number="7">    <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;col-sm-8&quot;</span><span class="kw">&gt;</span>my main panel<span class="kw">&lt;/div&gt;</span></a>
+<a class="sourceLine" id="cb65-8" data-line-number="8">  <span class="kw">&lt;/div&gt;</span></a>
+<a class="sourceLine" id="cb65-9" data-line-number="9"><span class="kw">&lt;/div&gt;</span></a></code></pre></div></li>
+<li><p>The more fundamental layout constructor functions are <code>fluidRow()</code> and <code>column()</code>.</p></li>
+</ul>
+</section>
+<section id="html-builders" class="slide level2">
+<h2>HTML builders</h2>
+<!--
+    the following table source is mainly taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson2/
+-->
+<table>
+<thead>
+<tr>
+<th>
+Shiny
+</th>
+<th>
+HTML5
+</th>
+<th>
+creates
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>p()</code>
+</td>
+<td>
+<code>&lt;p&gt;</code>
+</td>
+<td>
+A paragraph of text
+</td>
+</tr>
+<tr>
+<td>
+<code>h1(), …, h6()</code>
+</td>
+<td>
+<code>&lt;h1&gt;, …, &lt;h6&gt;</code>
+</td>
+<td>
+a first, …, sixth level header
+</td>
+</tr>
+<tr>
+<td>
+<code>a()</code>
+</td>
+<td>
+<code>&lt;a&gt;</code>
+</td>
+<td>
+A hyper link
+</td>
+</tr>
+<tr>
+<td>
+<code>br()</code>
+</td>
+<td>
+<code>&lt;br&gt;</code>
+</td>
+<td>
+A line break
+</td>
+</tr>
+<tr>
+<td>
+<code>div()</code>
+</td>
+<td>
+<code>&lt;div&gt;</code>
+</td>
+<td>
+A division with a uniform style
+</td>
+</tr>
+<tr>
+<td>
+<code>span()</code>
+</td>
+<td>
+<code>&lt;span&gt;</code>
+</td>
+<td>
+An in-line version of division
+</td>
+</tr>
+<tr>
+<td>
+<code>strong()</code>
+</td>
+<td>
+<code>&lt;strong&gt;</code>
+</td>
+<td>
+Bold text
+</td>
+</tr>
+<tr>
+<td>
+<code>em()</code>
+</td>
+<td>
+<code>&lt;em&gt;</code>
+</td>
+<td>
+Italicized text
+</td>
+</tr>
+<tr>
+<td>
+<code>…</code>
+</td>
+<td>
+<code>…</code>
+</td>
+<td>
+…
+</td>
+</tr>
+<tr>
+<td>
+<code>HTML()</code>
+</td>
+<td>
+ 
+</td>
+<td>
+Directly passes character strings as HTML
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>shiny</strong> imports HTML builder functions from <strong>htmltools</strong>.</li>
+<li><code>names(tags)</code> returns a complete valid HTML5 tag list.</li>
+</ul>
+</section>
+<section id="basic-widgets" class="slide level2">
+<h2>Basic widgets</h2>
+<ul>
+<li>What is a web widget? A web element that users can interact with.</li>
+<li><a href="https://shiny.rstudio.com/gallery/widget-gallery.html" target="_blank">Standard widgets gallery</a></li>
+<li>The first two arguments for each widget function are
+<ul>
+<li><code>id</code> for widget name: users will not see the name, but you can use it to access the widget’s value. The name should be a character string.</li>
+<li><code>label</code> for widget label: this label will appear with the widget in your app. It should be a character string, but it can be an empty string <code>&quot;&quot;</code>.</li>
+</ul></li>
+</ul>
+</section>
+<section class="slide level2">
+
+<p>The standard Shiny widgets include</p>
+<!--
+    table source directly taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson3/
+-->
+<table>
+<thead>
+<tr>
+<th>
+function
+</th>
+<th>
+widget
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>actionButton</code>
+</td>
+<td>
+Action Button
+</td>
+</tr>
+<tr>
+<td>
+<code>checkboxGroupInput</code>
+</td>
+<td>
+A group of check boxes
+</td>
+</tr>
+<tr>
+<td>
+<code>checkboxInput</code>
+</td>
+<td>
+A single check box
+</td>
+</tr>
+<tr>
+<td>
+<code>dateInput</code>
+</td>
+<td>
+A calendar to aid date selection
+</td>
+</tr>
+<tr>
+<td>
+<code>dateRangeInput</code>
+</td>
+<td>
+A pair of calendars for selecting a date range
+</td>
+</tr>
+<tr>
+<td>
+<code>fileInput</code>
+</td>
+<td>
+A file upload control wizard
+</td>
+</tr>
+<tr>
+<td>
+<code>helpText</code>
+</td>
+<td>
+Help text that can be added to an input form
+</td>
+</tr>
+<tr>
+<td>
+<code>numericInput</code>
+</td>
+<td>
+A field to enter numbers
+</td>
+</tr>
+<tr>
+<td>
+<code>radioButtons</code>
+</td>
+<td>
+A set of radio buttons
+</td>
+</tr>
+<tr>
+<td>
+<code>selectInput</code>
+</td>
+<td>
+A box with choices to select from
+</td>
+</tr>
+<tr>
+<td>
+<code>sliderInput</code>
+</td>
+<td>
+A slider bar
+</td>
+</tr>
+<tr>
+<td>
+<code>submitButton</code>
+</td>
+<td>
+A submit button
+</td>
+</tr>
+<tr>
+<td>
+<code>textInput</code>
+</td>
+<td>
+A field to enter text
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reactive-output" class="slide level2">
+<h2>Reactive output</h2>
+<p><code>*Output</code> functions in <code>ui</code> or <code>ui.R</code> turn R objects into output of UI.</p>
+<!--
+    table source taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson4/
+-->
+<table>
+<thead>
+<tr>
+<th>
+Output function
+</th>
+<th>
+Creates
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>htmlOutput</code>
+</td>
+<td>
+raw HTML
+</td>
+</tr>
+<tr>
+<td>
+<code>imageOutput</code>
+</td>
+<td>
+image
+</td>
+</tr>
+<tr>
+<td>
+<code>plotOutput</code>
+</td>
+<td>
+plot
+</td>
+</tr>
+<tr>
+<td>
+<code>tableOutput</code>
+</td>
+<td>
+table
+</td>
+</tr>
+<tr>
+<td>
+<code>textOutput</code>
+</td>
+<td>
+text
+</td>
+</tr>
+<tr>
+<td>
+<code>uiOutput</code>
+</td>
+<td>
+raw HTML
+</td>
+</tr>
+<tr>
+<td>
+<code>verbatimTextOutput</code>
+</td>
+<td>
+text
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>These <code>*Output</code> functions take output name/ID as input.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<p><code>render*</code> functions in <code>server</code> or <code>server.R</code></p>
+<!--
+    table source taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson4/
+-->
+<table>
+<thead>
+<tr>
+<th>
+render function
+</th>
+<th>
+creates
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>renderImage</code>
+</td>
+<td>
+images (saved as a link to a source file)
+</td>
+</tr>
+<tr>
+<td>
+<code>renderPlot</code>
+</td>
+<td>
+plots
+</td>
+</tr>
+<tr>
+<td>
+<code>renderPrint</code>
+</td>
+<td>
+any printed output
+</td>
+</tr>
+<tr>
+<td>
+<code>renderTable</code>
+</td>
+<td>
+data frame, matrix, other table like structures
+</td>
+</tr>
+<tr>
+<td>
+<code>renderText</code>
+</td>
+<td>
+character strings
+</td>
+</tr>
+<tr>
+<td>
+<code>renderUI</code>
+</td>
+<td>
+a Shiny tag object or HTML
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>These <code>render*</code> functions take a single argument: an R expression surrounded by <code>{}</code>.</li>
+<li>Shiny runs the R expressions inside <code>render*</code> functions once each time a user changes the value of a widget.</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<div class="full-height">
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</a>
+<a class="sourceLine" id="cb66-2" data-line-number="2">    <span class="kw">titlePanel</span>(<span class="st">&quot;a simple example of reactive output&quot;</span>),</a>
+<a class="sourceLine" id="cb66-3" data-line-number="3">    <span class="kw">sidebarLayout</span>(</a>
+<a class="sourceLine" id="cb66-4" data-line-number="4">        <span class="kw">sidebarPanel</span>(</a>
+<a class="sourceLine" id="cb66-5" data-line-number="5">            <span class="kw">selectInput</span>(<span class="st">&quot;cyl&quot;</span>, <span class="st">&quot;Cylinders&quot;</span>,</a>
+<a class="sourceLine" id="cb66-6" data-line-number="6">                        <span class="dt">choices =</span> <span class="kw">sort</span>(<span class="kw">unique</span>(mtcars<span class="op">$</span>cyl)),</a>
+<a class="sourceLine" id="cb66-7" data-line-number="7">                        <span class="dt">selected =</span> <span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb66-8" data-line-number="8">        ),</a>
+<a class="sourceLine" id="cb66-9" data-line-number="9">        <span class="kw">mainPanel</span>(<span class="kw">plotOutput</span>(<span class="st">&quot;mpg_boxplot&quot;</span>))</a>
+<a class="sourceLine" id="cb66-10" data-line-number="10">    )</a>
+<a class="sourceLine" id="cb66-11" data-line-number="11">)</a>
+<a class="sourceLine" id="cb66-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb66-13" data-line-number="13">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output) {</a>
+<a class="sourceLine" id="cb66-14" data-line-number="14">    ## the `renderPlot` runs every time a user changes input$cyl</a>
+<a class="sourceLine" id="cb66-15" data-line-number="15">    output<span class="op">$</span>mpg_boxplot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>({</a>
+<a class="sourceLine" id="cb66-16" data-line-number="16">        ## filtering the cars models in the mtcars dataset</a>
+<a class="sourceLine" id="cb66-17" data-line-number="17">        ## by the input cylinder number</a>
+<a class="sourceLine" id="cb66-18" data-line-number="18">        dat &lt;-<span class="st"> </span><span class="kw">subset</span>(mtcars, cyl <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>cyl)</a>
+<a class="sourceLine" id="cb66-19" data-line-number="19">        ## draw a boxplot of mpg for the filtered data</a>
+<a class="sourceLine" id="cb66-20" data-line-number="20">        <span class="kw">with</span>(dat, <span class="kw">boxplot</span>(mpg))</a>
+<a class="sourceLine" id="cb66-21" data-line-number="21">    })</a>
+<a class="sourceLine" id="cb66-22" data-line-number="22">}</a>
+<a class="sourceLine" id="cb66-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb66-24" data-line-number="24"><span class="kw">shinyApp</span>(ui, server)</a></code></pre></div>
+</div>
+</section>
+<section class="slide level2">
+
+<iframe src="https://shiny.wenjie-stat.me/examples/mtcars/?showcase=0" width="100%" height="600px">
+</iframe>
+</section>
+<section id="reactive-expressions" class="slide level2">
+<h2>Reactive expressions</h2>
+<ul>
+<li>Create a reactive expression by the <code>reactive()</code> function, which takes an R expression surrounded by <code>{}</code> similar to <code>render*</code> functions.</li>
+</ul>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</a>
+<a class="sourceLine" id="cb67-2" data-line-number="2">    ## e.g., a simple reactive expression for filtering the cars models</a>
+<a class="sourceLine" id="cb67-3" data-line-number="3">    ## in the mtcars dataset by the input cylinder</a>
+<a class="sourceLine" id="cb67-4" data-line-number="4">    dataInput &lt;-<span class="st"> </span><span class="kw">reactive</span>({</a>
+<a class="sourceLine" id="cb67-5" data-line-number="5">        <span class="kw">subset</span>(mtcars, cyl <span class="op">==</span><span class="st"> </span>input<span class="op">$</span>cyl)</a>
+<a class="sourceLine" id="cb67-6" data-line-number="6">    })</a>
+<a class="sourceLine" id="cb67-7" data-line-number="7">    ## draw a boxplot of mpg for the filtered data</a>
+<a class="sourceLine" id="cb67-8" data-line-number="8">    output<span class="op">$</span>mpg_boxplot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>({</a>
+<a class="sourceLine" id="cb67-9" data-line-number="9">        dat &lt;-<span class="st"> </span><span class="kw">dataInput</span>()</a>
+<a class="sourceLine" id="cb67-10" data-line-number="10">        <span class="kw">with</span>(dat, <span class="kw">boxplot</span>(mpg))</a>
+<a class="sourceLine" id="cb67-11" data-line-number="11">    })</a>
+<a class="sourceLine" id="cb67-12" data-line-number="12">}</a></code></pre></div>
+<ul>
+<li>Reactive expressions cache values and update them only when it is necessary, which make the app faster.</li>
+</ul>
+</section>
+<section id="share-shiny-apps" class="slide level2">
+<h2>Share Shiny apps</h2>
+<ul>
+<li><p>share as R scripts by <code>runApp()</code>, <code>runUrl()</code>, <code>runGitHub()</code> or <code>runGist()</code></p></li>
+<li>share as a web page:
+<ul>
+<li><a href="https://www.shinyapps.io" target="_blank">https://www.shinyapps.io</a>
+<ul>
+<li>free for 5 apps and 25 active hours per month</li>
+</ul></li>
+<li>Shiny server open source
+<ul>
+<li>very basic features</li>
+<li>e.g., my Shiny server: <a href="https://shiny.wenjie-stat.me" target="_blank">https://shiny.wenjie-stat.me</a></li>
+</ul></li>
+<li>Shiny server Pro</li>
+<li>RStudio Connect</li>
+</ul></li>
+</ul>
+</section>
+<section id="more-advanced-html-widgets" class="slide level2">
+<h2>More advanced HTML widgets</h2>
+<ul>
+<li><strong><a href="http://www.htmlwidgets.org/" target="_blank">htmlwidgets</a></strong> package provides a framework that helps to bring the best of JavaScript data visualization to R.</li>
+<li>example R packages built with <strong>htmltwidgets</strong>:
+<ul>
+<li><strong><a href="https://github.com/rstudio/leaflet" target="_blank">leaflet</a></strong> for geo-spatial mapping powered by JavaScript library leaflet</li>
+<li><strong><a href="https://github.com/rstudio/dygraphs" target="_blank">dygraphs</a></strong> for time series charting powered by JavaScript library dygraphs</li>
+<li><strong><a href="https://plot.ly/r/" target="_blank">plotly</a></strong> and <strong><a href="http://jkunst.com/highcharter/" target="_blank">Highcharter</a></strong> for general interactive graphics powered by JavaScript library plotly.js and Highcharts, respectively.</li>
+<li><strong><a href="https://github.com/rstudio/DT" target="_blank">DT</a></strong> for tabular data display powered by JavaScript library DataTables.</li>
+</ul></li>
+</ul>
+</section>
+<section id="leaflet-example" class="slide level2">
+<h2>leaflet example</h2>
+<ul>
+<li>locations of earthquakes off Fiji</li>
+</ul>
+<iframe src="https://shiny.wenjie-stat.me/examples/leaflet/?showcase=0" width="100%" height="500px">
+</iframe>
+</section>
+<section id="dygraphs-example" class="slide level2">
+<h2>dygraphs example</h2>
+<iframe src="https://shiny.wenjie-stat.me/examples/dygraphs/?showcase=0" width="100%" height="500px">
+</iframe>
+</section>
+<section id="plotly-example" class="slide level2">
+<h2>plotly example</h2>
+<iframe src="https://shiny.wenjie-stat.me/examples/plotly/?showcase=0" width="100%" height="600px">
+</iframe>
+</section>
+<section id="dt-example" class="slide level2">
+<h2>DT example</h2>
+<iframe src="https://shiny.wenjie-stat.me/examples/DT/?showcase=0" width="100%" height="600px">
+</iframe>
+</section>
+<section id="more-options-on-ui-and-control-widgets" class="slide level2">
+<h2>More options on UI and control widgets</h2>
+<ul>
+<li><strong><a href="https://github.com/rstudio/shinythemes" target="_blank">shinythemes</a></strong> includes several Bootstrap themes from <a href="https://bootswatch.com/" target="_blank">Bootswatch</a>.</li>
+<li><strong><a href="https://github.com/rstudio/shinythemes" target="_blank">shinydashboard</a></strong> makes it easy to use Shiny to create dashboards.</li>
+<li><strong><a href="https://github.com/rstudio/miniUI" target="_blank">miniUI</a></strong> provides UI widget and layout functions for writing Shiny apps that work well on small screens.</li>
+<li><strong><a href="https://github.com/dreamRs/shinyWidgets" target="_blank">shinyWidgets</a></strong> provides more control widgets that are not available in <strong>shiny</strong> package.</li>
+<li><strong><a href="https://github.com/trestletech/shinyAce" target="_blank">shinyAce</a></strong> integrates the <a href="https://ace.c9.io" target="_blank">Ace text editor</a> with Shiny.</li>
+<li><strong><a href="https://github.com/Appsilon/shiny.semantic" target="_blank">shiny.semantic</a></strong> provides a wrapper for <a href="https://semantic-ui.com" target="_blank">Semantic UI</a>.</li>
+<li>…</li>
+</ul>
+</section>
+<section id="some-reference-and-further-reading" class="slide level2">
+<h2>Some reference and further reading</h2>
+<ul>
+<li><a href="https://bookdown.org/rdpeng/rprogdatascience/"><em>R Programming for Data Science</em></a> by Roger D. Peng</li>
+<li><a href="http://r4ds.had.co.nz/"><em>R for Data Science</em></a> by Garrett Grolemund, and Hadley Wickham</li>
+<li><a href="http://adv-r.had.co.nz"><em>Advanced R</em></a> by Hadley Wickham</li>
+<li><a href="https://github.com/yihui/knitr-book"><em>Dynamic documents with R and knitr</em></a> by Yihui Xie</li>
+<li>Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1-23.</li>
+<li><a href="https://github.com/daattali/advanced-shiny" target="_blank">a collection of Shiny tips &amp; tricks</a></li>
+<li><a href="https://shiny.rstudio.com/articles/modules.html" target="_blank">modularizing Shiny app code</a></li>
+<li><strong><a href="https://github.com/rstudio/shinytest" target="_blank">shinytest</a></strong> for automated testing for Shiny apps</li>
+<li><a href="https://shiny.rstudio.com/articles/" target="_blank">more articles</a> from RStudio</li>
+</ul>
+</section>
+<section id="thanks-and-happy-coding" class="slide level2">
+<h2>Thanks and happy coding!</h2>
+<ul>
+<li><a href="https://wenjie-stat.me" class="uri">https://wenjie-stat.me</a></li>
+<li><a href="https://github.com/wenjie2wang/" class="uri">https://github.com/wenjie2wang/</a></li>
+<li><a href="mailto:wenjie.2.wang@uconn.edu">wenjie.2.wang@uconn.edu</a></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="index_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="index_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: false,
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+
+        // Optional reveal.js plugins
+        dependencies: [
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+<script src="www/js/highlight_comments.js"></script>
+
+  </body>
+</html>
