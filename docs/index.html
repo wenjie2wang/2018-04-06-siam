@@ -549,7 +549,6 @@ Department of Statistics, UConn</div></h2>
 <li><p>data processing and manipulation</p></li>
 <li><p>reproducible reports with R Markdown</p></li>
 <li><p>interactive data visualization with R Shiny</p></li>
-<li><p><del>object oriented systems in R</del></p></li>
 </ul>
 </section>
 <section id="session-information" class="slide level2">
@@ -921,15 +920,15 @@ Department of Statistics, UConn</div></h2>
 <section id="summarize-and-group_by" class="slide level2">
 <h2><code>summarize</code> and <code>group_by()</code></h2>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1">dat_grouped &lt;-<span class="st"> </span><span class="kw">group_by</span>(dat, gamma)</a>
-<a class="sourceLine" id="cb52-2" data-line-number="2"><span class="kw">summarise</span>(dat_grouped, <span class="dt">mean_foo =</span> <span class="kw">sd</span>(foo), <span class="dt">median_bar =</span> <span class="kw">mean</span>(bar))</a></code></pre></div>
+<a class="sourceLine" id="cb52-2" data-line-number="2"><span class="kw">summarise</span>(dat_grouped, <span class="dt">sd_foo =</span> <span class="kw">sd</span>(foo), <span class="dt">mean_bar =</span> <span class="kw">mean</span>(bar))</a></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
-##   gamma mean_foo median_bar
-##   &lt;fct&gt;    &lt;dbl&gt;      &lt;dbl&gt;
-## 1 A        0.999       5.00
-## 2 B        0.998       5.01
-## 3 C        0.999       5.01
-## 4 D        1.00        5.00
-## 5 E        1.00        5.00</code></pre>
+##   gamma sd_foo mean_bar
+##   &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A      0.999     5.00
+## 2 B      0.998     5.01
+## 3 C      0.999     5.01
+## 4 D      1.00      5.00
+## 5 E      1.00      5.00</code></pre>
 </section>
 <section id="forward-pipe-operator" class="slide level2">
 <h2>Forward-pipe operator: <code>%&gt;%</code></h2>

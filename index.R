@@ -193,7 +193,7 @@ str(mutate(dat, bar_centered = bar - mean(bar)))
 
 ## ----dplyr-examples-group-by, cache = TRUE-------------------------------
 dat_grouped <- group_by(dat, gamma)
-summarise(dat_grouped, mean_foo = sd(foo), median_bar = mean(bar))
+summarise(dat_grouped, sd_foo = sd(foo), mean_bar = mean(bar))
 
 ## ----benchmark-pipe-1, cache = TRUE--------------------------------------
 microbenchmark(
