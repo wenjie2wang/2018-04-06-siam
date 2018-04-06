@@ -69,8 +69,12 @@ h2.author {
 }
 
 .reveal pre code {
-    max-height: 450px;
+    max-height: 550px;
     color: #222;
+}
+
+div.full-height pre code {
+    max-height: 650px;
 }
 
 div.sourceCode {
