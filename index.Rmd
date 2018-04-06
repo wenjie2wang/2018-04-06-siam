@@ -1,0 +1,1068 @@
+---
+title: "Introduction to R Programming"
+subtitle: "Part II"
+author: |
+  | Wenjie Wang
+  | Department of Statistics, UConn
+date: April 6, 2018
+---
+
+
+```{r setup, echo = FALSE}
+options(width = 100)
+
+### other simple utility functions
+## create a tag with some handy defaults
+a_new <- function(x, href = x, target = "_blank", ...)
+{
+    htmltools::tags$a(x, href = href, target = target, ...)
+}
+## paste with forward slash
+paste4 <- function(...) paste(..., sep = "/")
+
+### define some constants
+rstudio_github <- "https://github.com/rstudio"
+shiny_homepage <- "https://shiny.rstudio.com"
+shiny_examples_github <- paste4(rstudio_github, "shiny-examples")
+shiny_gallery <- paste4(shiny_homepage, "gallery")
+shiny_tutorial <- paste4(shiny_homepage, "tutorial")
+shiny_cheatsheet <- paste4(rstudio_github, "cheatsheets/blob/master/shiny.pdf")
+```
+
+
+## Getting Started
+
+- the slides of part I:
+  [wenjie-stat.me/2018-01-19-siam/][slides-part1]
+
+- these slides: [wenjie-stat.me/2018-04-06-siam/][slides-part2]
+
+- source code of these slides and all the examples:
+  [https://github.com/wenjie2wang/2018-04-06-siam/][source-repo]
+
+- prerequisites: [R][cran] and possibly the [RStudio IDE][rstudio-ide] have
+  been installed.
+
+- a list of R packages needed for following examples:
+
+  ```{r pkgs-slides, eval = FALSE}
+  install.packages(
+      c("bookdown", "data.table", "dplyr", "DT", "dygraphs", "htmltools",
+        "leaflet", "microbenchmark", "plotly", "R6", "readr", "shiny")
+  )
+  ```
+
+```{r need-packages, echo = FALSE}
+##' Check, Install and Attach Multiple R packages Specified
+##'
+##' The function first Checks whether the packages given were installed. Then
+##' install them if they are not, then attach them to the search path.
+##'
+##' @usage need.packages(pkg)
+##' @param pkg A character vector specifying the packages needed to reproduce
+##'     this document.
+##' @param ... Other arguments passed to function \code{\link[base]require}.
+##' @return NULL invisibly.
+##' @examples
+##' need.pacakges(c("ggplot2", "geepack"))
+need.packages <- function(pkg, ...)
+{
+    new.pkg <- pkg[! (pkg %in% installed.packages()[, "Package"])]
+    if (length(new.pkg))
+        install.packages(new.pkg, repos = "https://cloud.r-project.org")
+    foo <- function(a, ...) suppressMessages(require(a, ...))
+    sapply(pkg, foo, character.only = TRUE)
+    invisible(NULL)
+}
+need.packages(
+    c("bookdown", "data.table", "dplyr", "DT", "dygraphs", "htmltools",
+      "leaflet", "microbenchmark", "plotly", "R6", "readr", "shiny")
+)
+```
+
+
+## Outline
+
+- reading and writing data
+
+- data processing and manipulation
+
+- reproducible reports with R Markdown
+
+- interactive data visualization with R Shiny
+
+- ~~object oriented systems in R~~
+
+
+## Session information
+
+```{r session-info}
+sessionInfo()
+```
+
+
+## Reading and writing data
+
+- basic functions:
+
+```r
+read.table(), read.csv(), readLines(), load(), readRDS(), ...
+write.table(), write.csv(), writeLines(), save(), saveRDS(), ...
+```
+
+- can be slow when working with large data
+
+- some useful packages:
+  - for plain-text rectangular data (such as csv, tsv, and fwf):
+    **utils**, **[readr](https://readr.tidyverse.org)**,
+    **[data.table][data-dot-table]**, ...
+  - for data stored in other formats: **foreign**, **haven**, **openxlsx**, ...
+
+
+## Some tricks for efficiently reading large text files using `read.table()`
+
+- specify `nrows`: the maximum number of rows to read in
+  - e.g., we may determine the number of rows of `data.csv` by
+    `get_nrows("data.csv")`, where `get_nrows()` is a simple function as
+    follows:
+
+```{r get-nrows-function}
+get_nrows <- function(file) {
+    as.integer(
+        system2("wc", sprintf("-l %s | awk '{print $1}'", file), TRUE)
+    )
+}
+```
+
+- specify `colClasses`: column classes
+  - e.g., only read in the first ten rows (`nrows = 10`) and decide on the
+    appropriate classes
+
+- see [this short post][toby-hocking-post] by Toby Hocking for a nice summary
+
+
+## Using **readr** package
+
+```r
+read_table(), read_csv(), read_tsv(), read_fwf(), read_lines(), ...
+write_table(), write_csv(), write_tsv(), write_fwf(), write_lines(), ...
+```
+
+**readr** providers a few features that make it more user-friendly than base R:
+
+- more consistent arguments' naming (e.g., `col_names` vs. `header` and
+  `col_types` vs. `colClasses`)
+- leave strings as is by default, and automatically parse common date/time
+  formats
+- able to read compressed files (e.g., `.gz`, `.bz2`, `.xz`, or `.zip`)
+  automatically
+- ...
+
+
+## Using **data.table** package
+
+```r
+fread(), fwrite()
+```
+
+- `fread()`/`fwrite()` is similar to `read.table()`/`write.table()` but much
+  faster and more convenient.
+- All controls such as `sep`, `colClasses` and `nrows` are automatically
+  detected (or guessed) in `fread()`.
+
+
+## Example data
+
+- randomly generate a "not so small" csv file: `data.csv`
+
+```{r simu-large-data, cache = TRUE}
+options(stringsAsFactors = FALSE)
+set.seed(613); n <- 1e6
+dat <- data.frame(foo = rnorm(n),
+                  bar = rpois(n, 5),
+                  alpha = sample(letters, size = n, replace = TRUE),
+                  beta = as.Date(rpois(n, 10), origin = "2018-04-06"),
+                  gamma = gl(5, k = n / 5, labels = LETTERS[1:5]))
+str(dat)
+write.table(dat, file = "data.csv", sep = ",", row.names = FALSE)
+sprintf("File size: %.0f MB", file.info("data.csv")$size / 1024 ^ 2)
+```
+
+---
+
+## Examples of reading csv file
+
+```{r simple-read-table, eval = FALSE}
+## simply use `read.csv`
+dat1 <- read.csv("data.csv")
+## or `read.table`
+dat2 <- read.table("data.csv", sep = ",", header = TRUE)
+## or specify `nrows` and `colClasses`
+dat3 <- read.table("data.csv", sep = ",", header = TRUE,
+                   nrows = get_nrows("data.csv") - 1,
+                   colClasses = c("numeric", "integer",
+                                  rep("character", 3)))
+## use readr::read_csv
+dat4 <- readr::read_csv("data.csv")
+dat5 <- readr::read_csv("data.csv", col_types = c("diccc"),
+                        n_max = get_nrows("data.csv") - 1)
+## use data.table::fread
+dat6 <- data.table::fread("data.csv")
+dat7 <- data.table::fread("data.csv", header = TRUE, sep = ",",
+                          nrows = get_nrows("data.csv") - 1)
+## exercise:
+##   check the resulting column types of each `data.frame` object.
+##   is there any difference? what are the classes of `dat4`,...,`dat7`?
+```
+
+---
+
+
+```{r read-table-benchmark, cache = TRUE}
+library(microbenchmark)
+microbenchmark(
+    read.csv = read.csv("data.csv"),
+    read.table = read.table("data.csv", sep = ",", header = TRUE),
+    read.table_tricks = read.table("data.csv", sep = ",", header = TRUE,
+                                   nrows = get_nrows("data.csv") - 1L,
+                                   colClasses = c("numeric", "integer",
+                                                  rep("character", 3))),
+    read_csv = readr::read_csv("data.csv", col_types = cols()),
+    read_csv_tricks = readr::read_csv("data.csv", col_types = c("diccc"),
+                                      n_max = get_nrows("data.csv") - 1),
+    fread = data.table::fread("data.csv"),
+    fread_tricks = data.table::fread("data.csv", header = TRUE, sep = ",",
+                                     nrows = get_nrows("data.csv") - 1,
+                                     colClasses = c("numeric", "integer",
+                                                    rep("character", 3))),
+    times = 30, unit = "relative")
+```
+
+
+## Data processing and manipulation
+
+> - It is said that data scientists spent about 80% of time on the process of
+    cleaning and preparing the data.
+
+> - How to make data cleaning as efficient and effective as possible?
+
+> - In fact, base R provides a variety of useful functions for data processing
+    and manipulation.
+
+> - two popular add-on packages: **[dplyr](http://dplyr.tidyverse.org)** and
+    **[data.table][data-dot-table]**
+
+
+## dplyr: A grammar of data manipulation
+
+some of the key "verbs":
+
+- `select()`: picks columns/variables based on names or indices
+- `filter()`: extracts a subset of rows based on logical conditions
+- `arrange()`: reorders rows
+- `rename()`: renames columns/variables
+- `mutate()`: creates new columns/variables
+- `summarise()` or `summarize()`: computes summary statistics
+- `group_by()`: helps perform operations by group.
+
+
+## Common properties
+
+In particular,
+
+- We may directly refer to columns without using `$` operator.
+- The first argument is a data frame and the returned result is a new data frame.
+- must be tidy data (Wickham, 2014): one observation per row, and each column
+  representing a feature or characteristic of that observation
+
+
+## `select()`
+
+```{r dplyr-examples-select-1, cache = TRUE}
+names(dat)
+str(select(dat, foo, alpha))
+str(select(dat, bar:beta))
+str(select(dat, -(bar:beta)))
+```
+
+---
+
+- `select()` helpers:
+
+```r
+starts_with(), ends_with(), contains(), matches(),
+num_range(), one_of(), everything()
+```
+
+```{r dplyr-examples-select-2, cache = TRUE}
+str(select(dat, starts_with("b")))
+str(select(dat, ends_with("a")))
+str(select(dat, -matches("^b|a$")))
+```
+
+---
+
+## `filter()`
+
+```{r dplyr-examples-filter-1, cache = TRUE}
+str(filter(dat, foo > 2 & bar %in% c(3, 4)))
+## str(filter(dat, foo > 2, bar %in% c(3, 4))) # equivalent
+```
+
+- hmmm... why inventing another wheel?
+
+```{r dplyr-examples-filter-2, eval = FALSE}
+## why not use `[.data.frame`?
+subDat <- dat[dat$foo > 2 & dat$bar %in% c(3, 4), ]
+## not a fan of `$` operator? okay! no `$` if using `with`, right?
+subDat <- with(dat, dat[foo > 2 & bar %in% c(3, 4), ])
+## how about using `base::subset`?
+subDat <- base::subset(dat, foo > 2 & bar %in% c(3, 4))
+```
+
+## A quick benchmarking
+
+```{r benchmark-subset, cache = TRUE}
+dat_tbl <- tbl_df(dat)
+dat_dt <- as.data.table(dat)
+microbenchmark(
+    "[_$" = dat[dat$foo > 2 & dat$bar %in% c(3, 4), ],
+    "[_with" = with(dat, dat[foo > 2 & bar %in% c(3, 4), ]),
+    "subset" = base::subset(dat, foo > 2 & bar %in% c(3, 4)),
+    "filter_&" = dplyr::filter(dat, foo > 2 & bar %in% c(3, 4)),
+    "filter_," = dplyr::filter(dat, foo > 2, bar %in% c(3, 4)),
+    "filter_tbl" = dplyr::filter(dat_tbl, foo > 2, bar %in% c(3, 4)),
+    "data.table" = dat_dt[foo > 2 & bar %in% c(3, 4)],
+    times = 200, unit = "relative"
+)
+```
+
+## `arrange()`
+
+```{r dplyr-examples-arrange, cache = TRUE}
+asc_dat <- arrange(dat, beta, foo)
+head(select(asc_dat, beta, foo), 3)
+tail(select(asc_dat, beta, foo), 3)
+desc_dat <- arrange(dat, desc(beta), foo)
+head(select(desc_dat, beta, foo), 3)
+```
+
+- again, why not use `base::order`?
+
+
+## A quick benchmarking
+
+```{r benchmark-order, cache = TRUE}
+microbenchmark(
+    "order_$" = dat[order(as.numeric(dat$beta), dat$foo,
+                          decreasing = c(TRUE, FALSE)), ],
+    "order_with" = with(dat, dat[order(as.numeric(beta), foo,
+                                       decreasing = c(TRUE, FALSE)), ]),
+    "arrange" = arrange(dat, desc(beta), foo),
+    "arrange_as" = arrange(dat, desc(as.numeric(beta)), foo),
+    "data.table" = dat_dt[order(- beta, foo), ],
+    times = 100, unit = "relative"
+)
+```
+
+## `rename()`
+
+```{r dplyr-examples-rename-1, cache = TRUE}
+names(rename(dat, x = foo, y = bar))
+```
+
+- how to do it with base R?
+
+```{r dplyr-examples-rename-2, eval = FALSE}
+names(dat)[names(dat) == "foo"] <- "x"
+names(dat)[names(dat) == "bar"] <- "y"
+```
+
+- what about **data.table**?
+
+```{r data-table-examples-setnames, eval = FALSE}
+setnames(dat_dt, c("foo", "bar"), c("x", "y"))
+```
+
+## `mutate()`
+
+```{r dplyr-examples-mutate-1, cache = TRUE}
+str(mutate(dat, bar_centered = bar - mean(bar)))
+```
+
+- how to do it with base R?
+
+```{r dplyr-examples-mutate-2, eval = FALSE}
+dat$bar_centered <- dat$bar - mean(dat$bar)
+## or using `with`
+dat$bar_centered <- with(dat, bar - mean(bar))
+```
+
+- what about **data.table**?
+
+```{r data-table-examples-newCol, eval = FALSE}
+dat_dt[, `:=`(bar_centered = bar - mean(bar))]
+```
+
+
+## `summarize` and `group_by()`
+
+```{r dplyr-examples-group-by, cache = TRUE}
+dat_grouped <- group_by(dat, gamma)
+summarise(dat_grouped, mean_foo = sd(foo), median_bar = mean(bar))
+```
+
+---
+
+## Forward-pipe operator: `%>%`
+
+- provided by **[magrittr](https://CRAN.R-project.org/package=magrittr)**
+  package
+- similar idea to the "piping" (using `|`) in Linux and other Unix-like
+  operating systems
+- examples of basic chaining or piping:
+  - `x %>% f` $\Leftrightarrow$ `f(x)`
+  - `x %>% f(y)` $\Leftrightarrow$ `f(x, y)`
+  - `x %>% f %>% g %>% h` $\Leftrightarrow$ `h(g(f(x)))`
+- example of argument placeholder
+  - `x %>% f(y, .)` $\Leftrightarrow$ `f(y, x)`
+- pros: clearly expressing a sequence of multiple operations
+- cons: possibly hard to debug without intermediate steps
+
+
+## Quick benchmarkings
+
+- any performance compromised?
+
+```{r benchmark-pipe-1, cache = TRUE}
+microbenchmark(
+    nested = summary(head(dat, n = 100)),
+    steps = {
+        tmpDat <- head(dat, n = 100)
+        summary(tmpDat)
+    },
+    pipe = dat %>% head(n = 100) %>% summary,
+    times = 1e3, unit = "relative"
+)
+```
+
+---
+
+```{r benchmark-pipe-2, cache = TRUE}
+microbenchmark(
+    nested = prop.table(xtabs(~ bar, head(dat, n = 100))),
+    steps = {
+        tmpDat <- head(dat, n = 100)
+        tmpTab <- xtabs(~ bar, tmpDat)
+        prop.table(tmpTab)
+    },
+    pipe = dat %>% head(n = 100) %>% xtabs(~ bar, .) %>% prop.table,
+    times = 1e3, unit = "relative"
+)
+```
+
+## Using **dplyr** with piping
+
+```{r dplyr-example-all, cache = TRUE}
+dat %>%
+    select(- alpha) %>%
+    rename(group = gamma) %>%
+    mutate(abs_foo = abs(foo)) %>%
+    group_by(group) %>%
+    arrange(beta, desc(bar)) %>%
+    head(n = 200) %>%
+    summarize(median_abs_foo = median(abs_foo))
+```
+
+
+## Reproducible reports with R Markdown
+
+- code + narratives = report
+- some existing tools:
+  - WEB (Donald Knuth, Literate Programming)
+  - Noweb (Norman Ramsey)
+  - Sweave (Friedrich Leisch and R-core)
+  - **knitr** (Yihui Xie)
+  - Org mode + Babel (Carsten Dominik, Eric Schulte, ...)
+  - Jupyter notebook
+- **knitr**:
+  - `.Rnw` (R + LaTeX)
+  - `.Rmd` (R + Markdown)
+  - any computing language + any authoring language
+
+---
+
+- R Markdown (**rmarkdown**): http://rmarkdown.rstudio.com
+  - [gallery][rmarkdown-gallery]
+  - [cheatsheet][rmarkdown-cheatsheet]
+- **bookdown**: https://bookdown.org
+- examples:
+  - these slides
+  - a [project template][dslab-templates] written in R Markdown and **bookdown**
+    for [Data Science Lab at UConn](http://statds.org)
+  - learn from the other cool kids! http://yihui.name/knitr/demo/showcase/
+
+---
+
+
+## Interactive data visualization with R Shiny
+
+- What is R Shiny?
+
+- **shiny** is an R package that makes it easy to build interactive web
+    applications straight from R.
+  - homepage: `r a_new(shiny_homepage)`
+  - a collection of toy examples by RStudio:
+    `r a_new(shiny_examples_github)`
+  - official `r a_new('gallery', shiny_gallery)`,
+    `r a_new('tutorial', shiny_tutorial)`, and
+    `r a_new('cheatsheet', shiny_cheatsheet)`
+  - other galleries:
+    `r a_new("Show me Shiny", "https://www.showmeshiny.com")`,
+    `r a_new("Plotly", "https://plot.ly/r/shiny-gallery/")`, ...
+
+
+---
+
+## Some examples
+
+- `r a_new("Hello Shiny!", "https://gallery.shinyapps.io/001-hello/")`
+- `r a_new("Exploring Historical English Soccer Data",
+           "https://www.showmeshiny.com/historical-english-soccer/")`
+- `r a_new("Weekly influenza surveillance data",
+           "https://github.com/kb230557/Flu_Shiny_App")`
+- `r a_new("Paris car accidents",
+           "http://www.remyzum.com/shiny/Paris_Accidentologie/")`
+- `r a_new("Real estate analytics", "https://www.showmeshiny.com/shinyhome/")`
+  using Shiny dashboard
+
+
+## Structure of a Shiny app
+
+By execution order:
+
+1. `global.R`: an optional script for code needed in `ui.R` and
+   `server.R`
+
+    ```r
+    library(shiny)              # e.g., attach the Shiny package
+    ```
+
+2. `ui.R`: define user interface (UI) design
+
+    ```r
+    shinyUI(fluidPage(
+        ## e.g., create a fluid page
+    ))
+    ```
+
+3. `server.R`: define server-side logic
+
+    ```r
+    shinyServer(function(input, output, session) {
+        ## a function with two required argument, `input` and `output`,
+        ## and an optional argument `session`
+    })
+    ```
+
+
+## Alternative structure
+
+- a sinlge script called `app.R`
+
+```r
+library(shiny)
+
+## e.g., create a fluid page
+ui <- fluidPage(
+    ## some ui elements and widgets
+)
+
+## define server-side logic
+server <- function(input, output, session) {
+    ## the server function body
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+
+## Sidebar layout
+
+```{r sidebar-layout}
+ui <- fluidPage(
+    titlePanel("my title panel"),
+    sidebarLayout(
+        sidebarPanel("my sidebar panel"),
+        mainPanel("my main panel")
+    )
+)
+```
+
+<hr/>
+
+```{r sidebar-layout-preview, echo = FALSE, results = "asis"}
+ui
+```
+
+---
+
+- Shiny uses `r a_new("Twitter Bootstrap 3",
+  "https://getbootstrap.com/docs/3.3/")`, the probably most popular HTML, CSS,
+  and JS framework for developing responsive, mobile first projects on the web.
+
+- the essential HTML code defined in `ui`:
+
+  ```{r sidebar-layout-html, echo = FALSE, comment = "", class.output = "sourceCode html"}
+  print(ui)
+  ```
+
+- The more fundamental layout constructor functions are `fluidRow()` and
+  `column()`.
+
+
+## HTML builders
+
+<!--
+    the following table source is mainly taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson2/
+-->
+
+<table>
+  <thead>
+    <tr>
+      <th>Shiny</th>
+      <th>HTML5</th>
+      <th>creates</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>p()</code></td>
+      <td><code>&lt;p&gt;</code></td>
+      <td>A paragraph of text</td>
+    </tr>
+    <tr>
+      <td><code>h1(), ..., h6()</code></td>
+      <td><code>&lt;h1&gt;, ..., &lt;h6&gt;</code></td>
+      <td>a first, ..., sixth level header</td>
+    </tr>
+    <tr>
+      <td><code>a()</code></td>
+      <td><code>&lt;a&gt;</code></td>
+      <td>A hyper link</td>
+    </tr>
+    <tr>
+      <td><code>br()</code></td>
+      <td><code>&lt;br&gt;</code></td>
+      <td>A line break</td>
+    </tr>
+    <tr>
+      <td><code>div()</code></td>
+      <td><code>&lt;div&gt;</code></td>
+      <td>A division with a uniform style</td>
+    </tr>
+    <tr>
+      <td><code>span()</code></td>
+      <td><code>&lt;span&gt;</code></td>
+      <td>An in-line version of division</td>
+    </tr>
+    <tr>
+      <td><code>strong()</code></td>
+      <td><code>&lt;strong&gt;</code></td>
+      <td>Bold text</td>
+    </tr>
+    <tr>
+      <td><code>em()</code></td>
+      <td><code>&lt;em&gt;</code></td>
+      <td>Italicized text</td>
+    </tr>
+    <tr>
+      <td><code>...</code></td>
+      <td><code>...</code></td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td><code>HTML()</code></td>
+      <td>&nbsp;</td>
+      <td>Directly passes character strings as HTML</td>
+    </tr>
+  </tbody>
+</table>
+
+
+- **shiny** imports HTML builder functions from **htmltools**.
+- `names(tags)` returns a complete valid HTML5 tag list.
+
+
+## Basic widgets
+
+- What is a web widget? A web element that users can interact with.
+- `r a_new("Standard widgets gallery",
+  "https://shiny.rstudio.com/gallery/widget-gallery.html")`
+- The first two arguments for each widget function are
+  - `id` for widget name: users will not see the name, but you can use it
+    to access the widget's value. The name should be a character string.
+  - `label` for widget label: this label will appear with the widget in your
+    app. It should be a character string, but it can be an empty string `""`.
+
+---
+
+The standard Shiny widgets include
+
+<!--
+    table source directly taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson3/
+-->
+
+<table>
+  <thead>
+    <tr>
+      <th>function</th>
+      <th>widget</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>actionButton</code></td>
+      <td>Action Button</td>
+    </tr>
+    <tr>
+      <td><code>checkboxGroupInput</code></td>
+      <td>A group of check boxes</td>
+    </tr>
+    <tr>
+      <td><code>checkboxInput</code></td>
+      <td>A single check box</td>
+    </tr>
+    <tr>
+      <td><code>dateInput</code></td>
+      <td>A calendar to aid date selection</td>
+    </tr>
+    <tr>
+      <td><code>dateRangeInput</code></td>
+      <td>A pair of calendars for selecting a date range</td>
+    </tr>
+    <tr>
+      <td><code>fileInput</code></td>
+      <td>A file upload control wizard</td>
+    </tr>
+    <tr>
+      <td><code>helpText</code></td>
+      <td>Help text that can be added to an input form</td>
+    </tr>
+    <tr>
+      <td><code>numericInput</code></td>
+      <td>A field to enter numbers</td>
+    </tr>
+    <tr>
+      <td><code>radioButtons</code></td>
+      <td>A set of radio buttons</td>
+    </tr>
+    <tr>
+      <td><code>selectInput</code></td>
+      <td>A box with choices to select from</td>
+    </tr>
+    <tr>
+      <td><code>sliderInput</code></td>
+      <td>A slider bar</td>
+    </tr>
+    <tr>
+      <td><code>submitButton</code></td>
+      <td>A submit button</td>
+    </tr>
+    <tr>
+      <td><code>textInput</code></td>
+      <td>A field to enter text</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## Reactive output
+
+`*Output` functions in `ui` or `ui.R` turn R objects into output of UI.
+
+<!--
+    table source taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson4/
+-->
+
+<table>
+  <thead>
+    <tr>
+      <th>Output function</th>
+      <th>Creates</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>htmlOutput</code></td>
+      <td>raw HTML</td>
+    </tr>
+    <tr>
+      <td><code>imageOutput</code></td>
+      <td>image</td>
+    </tr>
+    <tr>
+      <td><code>plotOutput</code></td>
+      <td>plot</td>
+    </tr>
+    <tr>
+      <td><code>tableOutput</code></td>
+      <td>table</td>
+    </tr>
+    <tr>
+      <td><code>textOutput</code></td>
+      <td>text</td>
+    </tr>
+    <tr>
+      <td><code>uiOutput</code></td>
+      <td>raw HTML</td>
+    </tr>
+    <tr>
+      <td><code>verbatimTextOutput</code></td>
+      <td>text</td>
+    </tr>
+  </tbody>
+</table>
+
+- These `*Output` functions take output name/ID as input.
+
+---
+
+`render*` functions in `server` or `server.R`
+
+<!--
+    table source taken from
+    http://shiny.rstudio.com/tutorial/written-tutorial/lesson4/
+-->
+
+<table>
+  <thead>
+    <tr>
+      <th>render function</th>
+      <th>creates</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>renderImage</code></td>
+      <td>images (saved as a link to a source file)</td>
+    </tr>
+    <tr>
+      <td><code>renderPlot</code></td>
+      <td>plots</td>
+    </tr>
+    <tr>
+      <td><code>renderPrint</code></td>
+      <td>any printed output</td>
+    </tr>
+    <tr>
+      <td><code>renderTable</code></td>
+      <td>data frame, matrix, other table like structures</td>
+    </tr>
+    <tr>
+      <td><code>renderText</code></td>
+      <td>character strings</td>
+    </tr>
+    <tr>
+      <td><code>renderUI</code></td>
+      <td>a Shiny tag object or HTML</td>
+    </tr>
+  </tbody>
+</table>
+
+- These `render*` functions take a single argument: an R expression surrounded
+  by `{}`.
+- Shiny runs the R expressions inside `render*` functions once each time a user
+  changes the value of a widget.
+
+---
+
+<div class="full-height">
+```r
+ui <- fluidPage(
+    titlePanel("a simple example of reactive output"),
+    sidebarLayout(
+        sidebarPanel(
+            selectInput("cyl", "Cylinders",
+                        choices = sort(unique(mtcars$cyl)),
+                        selected = 4)
+        ),
+        mainPanel(plotOutput("mpg_boxplot"))
+    )
+)
+
+server <- function(input, output) {
+    ## the `renderPlot` runs every time a user changes input$cyl
+    output$mpg_boxplot <- renderPlot({
+        ## filtering the cars models in the mtcars dataset
+        ## by the input cylinder number
+        dat <- subset(mtcars, cyl == input$cyl)
+        ## draw a boxplot of mpg for the filtered data
+        with(dat, boxplot(mpg))
+    })
+}
+
+shinyApp(ui, server)
+```
+</div>
+
+---
+
+```{r mtcars-app, echo = FALSE}
+knitr::include_app("https://shiny.wenjie-stat.me/examples/mtcars/",
+                   height = "600px")
+```
+
+
+## Reactive expressions
+
+- Create a reactive expression by the `reactive()` function, which takes
+  an R expression surrounded by `{}` similar to `render*` functions.
+
+```r
+server <- function(input, output, session) {
+    ## e.g., a simple reactive expression for filtering the cars models
+    ## in the mtcars dataset by the input cylinder
+    dataInput <- reactive({
+        subset(mtcars, cyl == input$cyl)
+    })
+    ## draw a boxplot of mpg for the filtered data
+    output$mpg_boxplot <- renderPlot({
+        dat <- dataInput()
+        with(dat, boxplot(mpg))
+    })
+}
+```
+
+- Reactive expressions cache values and update them only when it is necessary,
+  which make the app faster.
+
+
+## Share Shiny apps
+
+- share as R scripts by `runApp()`, `runUrl()`, `runGitHub()` or `runGist()`
+
+- share as a web page:
+  - `r a_new("https://www.shinyapps.io")`
+    - free for 5 apps and 25 active hours per month
+  - Shiny server open source
+    - very basic features
+    - e.g., my Shiny server: `r a_new("https://shiny.wenjie-stat.me")`
+  - Shiny server Pro
+  - RStudio Connect
+
+
+## More advanced HTML widgets
+
+- **`r a_new("htmlwidgets", "http://www.htmlwidgets.org/")`**
+  package provides a framework that helps to bring the best of
+  JavaScript data visualization to R.
+- example R packages built with **htmltwidgets**:
+  - **`r a_new("leaflet", paste4(rstudio_github, "leaflet"))`**
+    for geo-spatial mapping powered by JavaScript library leaflet
+  - **`r a_new("dygraphs", paste4(rstudio_github, "dygraphs"))`**
+    for time series charting powered by JavaScript library dygraphs
+  - **`r a_new("plotly", "https://plot.ly/r/")`** and
+    **`r a_new("Highcharter", "http://jkunst.com/highcharter/")`**
+    for general interactive graphics powered by
+    JavaScript library plotly.js and Highcharts, respectively.
+  - **`r a_new("DT", paste4(rstudio_github, "DT"))`** for tabular data display
+    powered by JavaScript library DataTables.
+
+
+## leaflet example
+
+- locations of earthquakes off Fiji
+
+```{r leaflet-app, echo = FALSE}
+knitr::include_app("https://shiny.wenjie-stat.me/examples/leaflet/",
+                   height = "500px")
+```
+
+
+## dygraphs example
+
+```{r dygraphs-app, echo = FALSE}
+knitr::include_app("https://shiny.wenjie-stat.me/examples/dygraphs/",
+                   height = "500px")
+```
+
+
+## plotly example
+
+```{r plotly-app, echo = FALSE}
+knitr::include_app("https://shiny.wenjie-stat.me/examples/plotly/",
+                   height = "600px")
+```
+
+
+## DT example
+
+```{r dt-app, echo = FALSE}
+knitr::include_app("https://shiny.wenjie-stat.me/examples/DT/",
+                   height = "600px")
+```
+
+
+## More options on UI and control widgets
+
+- **`r a_new("shinythemes", paste4(rstudio_github, "shinythemes"))`**
+  includes several Bootstrap themes from
+  `r a_new("Bootswatch", "https://bootswatch.com/")`.
+- **`r a_new("shinydashboard", paste4(rstudio_github, "shinythemes"))`**
+  makes it easy to use Shiny to create dashboards.
+- **`r a_new("miniUI", paste4(rstudio_github, "miniUI"))`** provides UI widget
+  and layout functions for writing Shiny apps that work well on small screens.
+- **`r a_new("shinyWidgets", "https://github.com/dreamRs/shinyWidgets")`**
+  provides more control widgets that are not available in **shiny** package.
+- **`r a_new("shinyAce", "https://github.com/trestletech/shinyAce")`**
+  integrates the `r a_new("Ace text editor", "https://ace.c9.io")` with Shiny.
+- **`r a_new("shiny.semantic", "https://github.com/Appsilon/shiny.semantic")`**
+  provides a wrapper for `r a_new("Semantic UI", "https://semantic-ui.com")`.
+- ...
+
+
+
+## Some reference and further reading
+
+- [*R Programming for Data
+  Science*](https://bookdown.org/rdpeng/rprogdatascience/) by Roger D. Peng
+- [*R for Data Science*](http://r4ds.had.co.nz/) by Garrett Grolemund, and
+  Hadley Wickham
+- [*Advanced R*](http://adv-r.had.co.nz) by Hadley Wickham
+- [*Dynamic documents with R and knitr*](https://github.com/yihui/knitr-book) by
+  Yihui Xie
+- Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1-23.
+- `r a_new("a collection of Shiny tips & tricks",
+  "https://github.com/daattali/advanced-shiny")`
+- `r a_new("modularizing Shiny app code",
+  "https://shiny.rstudio.com/articles/modules.html")`
+- **`r a_new("shinytest", paste4(rstudio_github, "shinytest"))`** for automated
+  testing for Shiny apps
+- `r a_new("more articles", "https://shiny.rstudio.com/articles/")` from RStudio
+
+
+## Thanks and happy coding!
+
+- https://wenjie-stat.me
+- https://github.com/wenjie2wang/
+- wenjie.2.wang@uconn.edu
+
+[slides-part1]: https://wenjie-stat.me/2018-01-19-siam/
+[slides-part2]: https://wenjie-stat.me/2018-04-06-siam/
+[source-repo]: https://github.com/wenjie2wang/2018-04-06-siam/
+[cran]: https://cran.r-project.org
+[rstudio-ide]: https://www.rstudio.com/products/RStudio/#Desktop
+[toby-hocking-post]:
+    http://members.cbio.mines-paristech.fr/~thocking/reading-large-text-files-into-R.html
+[data-dot-table]: https://github.com/Rdatatable/data.table/wiki
+[rmarkdown-cheatsheet]:
+    https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf
+[rmarkdown-gallery]: http://rmarkdown.rstudio.com/gallery.html
+[dslab-templates]: https://github.com/statds/dslab-templates
+[shiny-gallery]: http://shiny.rstudio.com/gallery/
+[shiny-cheatsheet]: http://shiny.rstudio.com/images/shiny-cheatsheet.pdf
+
